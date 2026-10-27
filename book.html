@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>The Book of UI Math</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@500;700&family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a book. A sticky chapter list on wide screens, one reading column, each chapter = rule, formula, live demo. */
+:root{
+  --void:#060b11; --hull:#0c1722; --panel:#101e2b; --line:#1d3245;
+  --ink:#e6eef5; --ink-2:#97abbd; --ink-3:#61778a; --cyan:#4fb6f0; --amber:#efa13a; --mint:#2fc191; --rose:#e56a98;
+  --f-display:"Syne","Segoe UI",system-ui,sans-serif; --f-body:"IBM Plex Sans","Segoe UI",system-ui,sans-serif; --f-mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{background:var(--void);color:var(--ink);margin:0}
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+body{font-family:var(--f-body);font-size:16px;line-height:1.7;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 72px}
+a{color:var(--cyan)}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+.layout{max-width:1120px;margin:0 auto;display:grid;grid-template-columns:220px minmax(0,1fr);gap:48px}
+nav.toc{position:sticky;top:20px;align-self:start;display:flex;flex-direction:column;gap:2px;font-size:14px}
+nav.toc a{color:var(--ink-2);text-decoration:none;padding:5px 10px;border-radius:4px;border-left:2px solid transparent}
+nav.toc a:hover{color:var(--ink);background:var(--panel)}
+nav.toc a.on{color:var(--ink);border-left-color:var(--cyan);background:var(--panel)}
+nav.toc .back{font-family:var(--f-mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--cyan);margin-bottom:12px;padding-left:0}
+main{min-width:0;display:flex;flex-direction:column;gap:56px}
+.eyebrow{font-family:var(--f-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--cyan)}
+h1{font-family:var(--f-display);font-weight:700;font-size:clamp(34px,6vw,60px);line-height:1;margin:10px 0 16px;text-wrap:balance}
+h2{font-family:var(--f-display);font-weight:500;font-size:26px;margin:0;text-wrap:balance}
+h2 .n{color:var(--cyan);margin-right:10px}
+p{margin:0;max-width:66ch;color:var(--ink-2)}
+.lede{font-size:18px;color:var(--ink)}
+section{display:flex;flex-direction:column;gap:14px;scroll-margin-top:20px}
+.rule{color:var(--ink);font-size:17px;max-width:66ch}
+.formula{font-family:var(--f-mono);font-size:15px;color:var(--ink);background:var(--hull);border:1px solid var(--line);border-left:3px solid var(--cyan);border-radius:0 8px 8px 0;padding:12px 16px;overflow-x:auto;white-space:pre}
+.demo{background:var(--hull);border:1px solid var(--line);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.demo .label{font-family:var(--f-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--amber)}
+.controls{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;font-size:14px;color:var(--ink-2)}
+.controls label{display:flex;align-items:center;gap:8px}
+input[type=number],select{background:var(--void);color:var(--ink);border:1px solid var(--line);border-radius:4px;padding:5px 8px;font:14px var(--f-mono);width:90px}
+select{width:auto}
+input[type=color]{width:40px;height:30px;border:1px solid var(--line);border-radius:4px;background:var(--void);padding:2px}
+input[type=range]{accent-color:var(--cyan)}
+.scale{display:flex;flex-direction:column;gap:6px;overflow:hidden}
+.scale div{display:flex;align-items:baseline;gap:14px;white-space:nowrap}
+.scale code{font:12px var(--f-mono);color:var(--ink-3);min-width:110px;font-variant-numeric:tabular-nums}
+.scale span{font-family:var(--f-display);color:var(--ink);line-height:1.15;overflow:hidden;text-overflow:ellipsis}
+.gridviz{position:relative;height:120px;background:var(--void);border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.gridviz i{position:absolute;top:0;bottom:0;background:rgba(79,182,240,.16);border-left:1px solid rgba(79,182,240,.5);border-right:1px solid rgba(79,182,240,.5)}
+.out{font-family:var(--f-mono);font-size:13px;color:var(--ink);font-variant-numeric:tabular-nums}
+.out b{color:var(--mint);font-weight:500}
+.swatch{border-radius:8px;padding:18px;font-size:18px;border:1px solid var(--line)}
+.pass{color:var(--mint)} .fail{color:var(--rose)}
+canvas{display:block;width:100%;max-width:100%;border-radius:8px;background:#05090d;border:1px solid var(--line)}
+.measure-demo{background:var(--void);border:1px solid var(--line);border-radius:6px;padding:14px;color:var(--ink);font-size:15px;line-height:1.6}
+.bez{display:flex;gap:16px;flex-wrap:wrap;align-items:center}
+.track{flex:1;min-width:220px;height:34px;background:var(--void);border:1px solid var(--line);border-radius:17px;position:relative}
+.dot{position:absolute;top:5px;left:5px;width:22px;height:22px;border-radius:50%;background:var(--cyan)}
+button.btn{font:12px var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:7px 12px;cursor:pointer}
+button.btn:hover{border-color:var(--cyan)}
+footer{color:var(--ink-3);font-size:13px;border-top:1px solid var(--line);padding-top:16px}
+@media (max-width:860px){.layout{grid-template-columns:1fr;gap:24px}nav.toc{position:static;flex-direction:row;flex-wrap:wrap}nav.toc .back{width:100%}}
+</style>
+</head>
+<body>
+<div class="layout">
+  <nav class="toc" aria-label="Chapters">
+    <a class="back" href="./">← Back to the theater</a>
+    <a href="#scale">1 · Scale</a>
+    <a href="#rhythm">2 · Rhythm</a>
+    <a href="#grid">3 · Grid</a>
+    <a href="#measure">4 · Measure</a>
+    <a href="#contrast">5 · Contrast</a>
+    <a href="#motion">6 · Motion</a>
+    <a href="#depth">7 · Depth</a>
+    <a href="#light">8 · Light</a>
+  </nav>
+
+  <main>
+    <header>
+      <div class="eyebrow">The book Justin asked for · v1 · 27 Oct 2026</div>
+      <h1>The Book of UI Math</h1>
+      <p class="lede">Perfect-looking screens aren't luck. Every good layout follows a handful of small formulas. This book is those formulas, one chapter each, with a live demo you can play with. It is also the rulebook the Scene Engine follows when it reads a JSON recipe.</p>
+    </header>
+
+    <section id="scale">
+      <h2><span class="n">1</span>Scale: sizes that belong together</h2>
+      <p class="rule">Pick one base size and one ratio. Every other size is the base multiplied by the ratio again and again. Sizes made this way always look related.</p>
+      <div class="formula">size(n) = base × ratio ⁿ        e.g. 16 × 1.25³ = 31.25px</div>
+      <div class="demo">
+        <span class="label">Try it</span>
+        <div class="controls">
+          <label>Base <input type="number" id="sBase" value="16" min="10" max="24" step="1"></label>
+          <label>Ratio <select id="sRatio">
+            <option value="1.125">1.125 · major second</option>
+            <option value="1.2">1.200 · minor third</option>
+            <option value="1.25" selected>1.250 · major third</option>
+            <option value="1.333">1.333 · perfect fourth</option>
+            <option value="1.5">1.500 · perfect fifth</option>
+            <option value="1.618">1.618 · golden ratio</option>
+          </select></label>
+        </div>
+        <div class="scale" id="scaleOut"></div>
+      </div>
+    </section>
+
+    <section id="rhythm">
+      <h2><span class="n">2</span>Rhythm: everything on a 4-point beat</h2>
+      <p class="rule">All spacing and line heights are multiples of 4 (or 8). Like music in time, the eye feels the beat even when it can't see it.</p>
+      <div class="formula">space(k) = 4 × k              → 4, 8, 12, 16, 24, 32, 48, 64
+line-height = round(size × 1.5 ÷ 4) × 4</div>
+      <div class="demo">
+        <span class="label">Line height for each size on the scale above</span>
+        <div class="out" id="rhythmOut"></div>
+      </div>
+    </section>
+
+    <section id="grid">
+      <h2><span class="n">3</span>Grid: columns that always add up</h2>
+      <p class="rule">Split the width into equal columns with equal gaps. Every block spans a whole number of columns, so edges line up everywhere on the page.</p>
+      <div class="formula">column = (width − 2 × margin − (n − 1) × gutter) ÷ n
+span(k) = k × column + (k − 1) × gutter</div>
+      <div class="demo">
+        <span class="label">Try it</span>
+        <div class="controls">
+          <label>Width <input type="number" id="gW" value="1440" min="320" max="2560" step="10"></label>
+          <label>Columns <input type="number" id="gN" value="12" min="2" max="24"></label>
+          <label>Gutter <input type="number" id="gG" value="24" min="0" max="64" step="4"></label>
+          <label>Margin <input type="number" id="gM" value="80" min="0" max="200" step="4"></label>
+        </div>
+        <div class="gridviz" id="gridViz" aria-hidden="true"></div>
+        <div class="out" id="gridOut"></div>
+      </div>
+    </section>
+
+    <section id="measure">
+      <h2><span class="n">4</span>Measure: lines you can actually read</h2>
+      <p class="rule">Keep lines of text between 45 and 75 characters. Too long and the eye loses its place going back; too short and reading becomes choppy.</p>
+      <div class="formula">width ≈ characters × 0.5em      66 characters ≈ 33em ≈ 528px at 16px</div>
+      <div class="demo">
+        <span class="label">Drag to change the line length</span>
+        <div class="controls"><label>Characters <input type="range" id="mCh" min="25" max="120" value="66"></label><span class="out" id="mOut"></span></div>
+        <div class="measure-demo" id="mDemo">The theater is a place where AI agents sit at desks and build operating systems for a business. Their work flows onto one big screen, and you review it all from the seats at the back. Notice how this paragraph gets harder to read when the lines get very long or very short.</div>
+      </div>
+    </section>
+
+    <section id="contrast">
+      <h2><span class="n">5</span>Contrast: text everyone can see</h2>
+      <p class="rule">Text needs enough brightness difference from its background. Normal text needs at least 4.5 : 1, large text 3 : 1. This is the WCAG formula.</p>
+      <div class="formula">L = 0.2126 R + 0.7152 G + 0.0722 B     (R, G, B linearized)
+ratio = (L_light + 0.05) ÷ (L_dark + 0.05)</div>
+      <div class="demo">
+        <span class="label">Pick two colors</span>
+        <div class="controls">
+          <label>Text <input type="color" id="cFg" value="#97abbd"></label>
+          <label>Background <input type="color" id="cBg" value="#0c1722"></label>
+          <span class="out" id="cOut"></span>
+        </div>
+        <div class="swatch" id="cSwatch">The quick robot at the publishing desk lays out the page.</div>
+      </div>
+    </section>
+
+    <section id="motion">
+      <h2><span class="n">6</span>Motion: curves, not straight lines</h2>
+      <p class="rule">Real things speed up and slow down. A cubic Bézier curve describes that change; most UI motion lasts 150 to 400 ms.</p>
+      <div class="formula">B(t) = (1−t)³P₀ + 3(1−t)²t P₁ + 3(1−t)t² P₂ + t³P₃
+ease-out = (0, 0, 0.2, 1)        linear = (0, 0, 1, 1)</div>
+      <div class="demo">
+        <span class="label">Same distance, same time, different curve</span>
+        <div class="bez"><span class="out" style="min-width:80px">linear</span><div class="track"><div class="dot" id="dLin"></div></div></div>
+        <div class="bez"><span class="out" style="min-width:80px">ease-out</span><div class="track"><div class="dot" id="dEase" style="background:var(--mint)"></div></div></div>
+        <div><button class="btn" id="playMotion" type="button">Play</button></div>
+      </div>
+    </section>
+
+    <section id="depth">
+      <h2><span class="n">7</span>Depth: how a point cloud becomes a picture</h2>
+      <p class="rule">A Game Boy screen was dots in X and Y, changing over time. A point cloud is dots in X, Y and Z, changing over time: XYZT. To draw it, divide each dot's X and Y by how far away it is. Far dots shrink toward the center; that is all perspective is.</p>
+      <div class="formula">x' = f × x ÷ z      y' = f × y ÷ z      (f = focal length)</div>
+      <div class="demo">
+        <span class="label">2,000 dots, drawn only with this formula</span>
+        <div class="controls"><label>Focal length <input type="range" id="pF" min="120" max="900" value="420"></label><span class="out" id="pOut"></span></div>
+        <canvas id="pc" width="960" height="420" aria-label="A rotating point cloud torus drawn with the perspective formula"></canvas>
+      </div>
+    </section>
+
+    <section id="light">
+      <h2><span class="n">8</span>Light: why point clouds light so easily</h2>
+      <p class="rule">Each dot can carry the direction its surface faces (its normal). Brightness is just how directly that normal points at the light. No baking, no textures: move the light and every dot updates.</p>
+      <div class="formula">brightness = max(0, N · L)       (N = surface normal, L = light direction)</div>
+      <div class="demo">
+        <span class="label">Move the light around the same point cloud</span>
+        <div class="controls"><label>Light angle <input type="range" id="lA" min="0" max="360" value="40"></label><label><input type="checkbox" id="lOn" checked> Lighting on</label></div>
+        <p style="font-size:14px">The cloud in chapter 7 above uses this formula for its shading.</p>
+      </div>
+    </section>
+
+    <footer>Version 1. Next chapters to add: optical alignment, color harmony, and the JSON recipe format that ties these rules to the Scene Engine.</footer>
+  </main>
+</div>
+
+<script>
+(function(){
+const $=id=>document.getElementById(id);
+function scale(){const b=+$('sBase').value||16,r=+$('sRatio').value,names=['Caption','Body','H6','H5','H4','H3','H2','H1'];
+  let html='',lh='';for(let n=-1;n<=6;n++){const s=b*Math.pow(r,n);html+='<div><code>'+names[n+1].padEnd(7)+' '+s.toFixed(1)+'px</code><span style="font-size:'+Math.min(s,72)+'px">Agents at work</span></div>';
+  lh+=names[n+1]+' '+s.toFixed(1)+'px → line-height <b>'+Math.round(s*1.5/4)*4+'px</b><br>';}
+  $('scaleOut').innerHTML=html;$('rhythmOut').innerHTML=lh;}
+['sBase','sRatio'].forEach(id=>$(id).addEventListener('input',scale));scale();
+
+function grid(){const W=+$('gW').value,n=Math.max(1,+$('gN').value|0),g=+$('gG').value,m=+$('gM').value;
+  const col=(W-2*m-(n-1)*g)/n,viz=$('gridViz'),vw=viz.clientWidth||600,k=vw/W;let h='';
+  for(let i=0;i<n;i++)h+='<i style="left:'+((m+i*(col+g))*k)+'px;width:'+Math.max(1,col*k)+'px"></i>';viz.innerHTML=h;
+  $('gridOut').innerHTML=col>0?'column = <b>'+col.toFixed(1)+'px</b> · span 4 = '+(4*col+3*g).toFixed(1)+'px · span 6 = '+(6*col+5*g).toFixed(1)+'px':'<span class="fail">Too many columns or gutters for this width.</span>';}
+['gW','gN','gG','gM'].forEach(id=>$(id).addEventListener('input',grid));addEventListener('resize',grid);grid();
+
+function measure(){const c=+$('mCh').value;$('mDemo').style.maxWidth=(c*0.5)+'em';const ok=c>=45&&c<=75;
+  $('mOut').innerHTML=c+' characters ≈ '+(c*0.5)+'em · <span class="'+(ok?'pass':'fail')+'">'+(ok?'comfortable':'hard to read')+'</span>';}
+$('mCh').addEventListener('input',measure);measure();
+
+function lum(hex){const v=[1,3,5].map(i=>parseInt(hex.substr(i,2),16)/255).map(c=>c<=0.03928?c/12.92:Math.pow((c+0.055)/1.055,2.4));return 0.2126*v[0]+0.7152*v[1]+0.0722*v[2];}
+function contrast(){const f=$('cFg').value,b=$('cBg').value,a=lum(f),c=lum(b),r=(Math.max(a,c)+0.05)/(Math.min(a,c)+0.05);
+  $('cSwatch').style.color=f;$('cSwatch').style.background=b;
+  $('cOut').innerHTML='ratio <b>'+r.toFixed(2)+' : 1</b> · normal text <span class="'+(r>=4.5?'pass':'fail')+'">'+(r>=4.5?'pass':'fail')+'</span> · large text <span class="'+(r>=3?'pass':'fail')+'">'+(r>=3?'pass':'fail')+'</span>';}
+['cFg','cBg'].forEach(id=>$(id).addEventListener('input',contrast));contrast();
+
+function bez(t,p1,p2){let lo=0,hi=1,x,u;for(let i=0;i<30;i++){u=(lo+hi)/2;x=3*(1-u)*(1-u)*u*p1[0]+3*(1-u)*u*u*p2[0]+u*u*u;if(x<t)lo=u;else hi=u;}return 3*(1-u)*(1-u)*u*p1[1]+3*(1-u)*u*u*p2[1]+u*u*u;}
+$('playMotion').addEventListener('click',()=>{const t0=performance.now(),D=900;
+  const step=now=>{const t=Math.min(1,(now-t0)/D);[['dLin',t],['dEase',bez(t,[0,0],[0.2,1])]].forEach(([id,v])=>{const d=$(id),w=d.parentElement.clientWidth-32;d.style.transform='translateX('+(v*w)+'px)';});if(t<1)requestAnimationFrame(step);};requestAnimationFrame(step);});
+
+const cv=$('pc'),x=cv.getContext('2d'),P=[];
+for(let i=0;i<2000;i++){const u=Math.random()*6.283,v=Math.random()*6.283,R=1.1,r=0.45;
+  const cx=Math.cos(u),sx=Math.sin(u),cvv=Math.cos(v),svv=Math.sin(v);
+  P.push({p:[(R+r*cvv)*cx,r*svv,(R+r*cvv)*sx],n:[cvv*cx,svv,cvv*sx]});}
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;let ang=0.6;
+function rot(v,a,b){const ca=Math.cos(a),sa=Math.sin(a),cb=Math.cos(b),sb=Math.sin(b);
+  let [X,Y,Z]=v;let x1=X*ca+Z*sa,z1=-X*sa+Z*ca;let y2=Y*cb-z1*sb,z2=Y*sb+z1*cb;return [x1,y2,z2];}
+function draw(){const f=+$('pF').value,W=cv.width,H=cv.height,la=+$('lA').value*Math.PI/180,L=[Math.cos(la),0.5,Math.sin(la)],ln=Math.hypot(...L),on=$('lOn').checked;
+  $('pOut').textContent='f = '+f;x.fillStyle='#05090d';x.fillRect(0,0,W,H);
+  const pts=P.map(o=>{const p=rot(o.p,ang,0.9),n=rot(o.n,ang,0.9);const z=p[2]+3.2;
+    const b=on?Math.max(0,(n[0]*L[0]+n[1]*L[1]+n[2]*L[2])/ln):0.7;return {x:W/2+f*p[0]/z,y:H/2+f*p[1]/z,z,b};}).sort((a,b)=>b.z-a.z);
+  pts.forEach(q=>{const s=Math.max(1.6,9/q.z),c=0.32+0.68*q.b;x.fillStyle='rgba('+Math.round(110*c+120*q.b)+','+Math.round(200*c+40*q.b)+','+Math.round(255*c)+','+(0.55+0.45*c)+')';x.fillRect(q.x-s/2,q.y-s/2,s,s);});
+  if(!reduce)ang+=0.006;requestAnimationFrame(draw);}
+draw();
+
+const links=[...document.querySelectorAll('nav.toc a[href^="#"]')];
+if('IntersectionObserver' in window){const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)links.forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+e.target.id));}),{rootMargin:'-40% 0px -55% 0px'});
+  document.querySelectorAll('main section').forEach(s=>io.observe(s));}
+})();
+</script>
+</body>
+</html>

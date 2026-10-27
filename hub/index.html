@@ -1,0 +1,265 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Project Link Hub</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: sticky index rail on wide screens, one band per project; each band = header, media (theater only), list of link rows */
+:root{
+  --bg:#f3f4f6; --surface:#ffffff; --fg:#151a22; --muted:#5b6474; --line:#dde1e7;
+  --theater:#0b84c6; --hoy:#c2552d; --gigs:#5b4fd0;
+  --chip:#eef1f5; --ok:#1c7f55;
+  --f-display:"Familjen Grotesk","Segoe UI",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans","Segoe UI",system-ui,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0f1218; --surface:#171b23; --fg:#e7eaf0; --muted:#98a1b2; --line:#283040;
+  --theater:#5cc4f5; --hoy:#f08a5d; --gigs:#9d94ff; --chip:#212836; --ok:#4fcf95; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f1218; --surface:#171b23; --fg:#e7eaf0; --muted:#98a1b2; --line:#283040;
+  --theater:#5cc4f5; --hoy:#f08a5d; --gigs:#9d94ff; --chip:#212836; --ok:#4fcf95; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:15px;line-height:1.55}
+a{color:inherit}
+.wrap{max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:40px 72px}
+header.top{display:flex;flex-wrap:wrap;gap:20px 40px;align-items:end;justify-content:space-between;padding-bottom:28px;border-bottom:1px solid var(--line)}
+.top h1{font-family:var(--f-display);font-weight:700;font-size:clamp(32px,6vw,52px);line-height:1;letter-spacing:-.02em;margin:0 0 10px;text-wrap:balance}
+.top p{margin:0;color:var(--muted);max-width:60ch}
+.tools{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.search{font:inherit;font-size:14px;width:min(320px,100%);padding:9px 12px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--fg)}
+.search:focus-visible,.btn:focus-visible,.copy:focus-visible,a:focus-visible{outline:2px solid var(--theater);outline-offset:2px}
+.btn{font:inherit;font-size:13px;font-weight:600;padding:9px 14px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--fg);cursor:pointer}
+.btn:hover{border-color:var(--muted)}
+.layout{display:grid;grid-template-columns:200px minmax(0,1fr);gap:48px;margin-top:36px}
+nav.rail{position:sticky;top:calc(env(safe-area-inset-top,0px) + 24px);align-self:start;display:flex;flex-direction:column;gap:4px}
+.rail .lbl{font-family:var(--f-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.rail a{display:flex;justify-content:space-between;gap:8px;text-decoration:none;padding:8px 10px;border-radius:6px;font-weight:500}
+.rail a:hover{background:var(--surface)}
+.rail a span{font-family:var(--f-mono);font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.rail a i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:8px;background:var(--c)}
+main{display:flex;flex-direction:column;gap:64px;min-width:0}
+section.proj{--c:var(--muted);min-width:0;scroll-margin-top:24px}
+.ph{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:end;justify-content:space-between;padding-bottom:16px;border-bottom:3px solid var(--c)}
+.ph h2{font-family:var(--f-display);font-weight:700;font-size:clamp(26px,4vw,36px);line-height:1.05;margin:0;letter-spacing:-.01em;text-wrap:balance}
+.ph .kick{font-family:var(--f-mono);font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--c);margin-bottom:6px}
+.ph p{margin:6px 0 0;color:var(--muted);max-width:62ch}
+.ph .acts{display:flex;gap:8px;flex-wrap:wrap}
+.primary{display:inline-flex;align-items:center;gap:8px;text-decoration:none;font-weight:600;font-size:14px;padding:9px 16px;border-radius:8px;background:var(--c);color:var(--bg)}
+.primary:hover{filter:brightness(1.08)}
+.media{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:16px;margin-top:20px}
+.media video{width:100%;aspect-ratio:16/9;border-radius:10px;background:#000;display:block}
+.vcap{font-size:13px;color:var(--muted);margin-top:8px}
+.thumbs{display:grid;grid-template-columns:1fr 1fr;gap:10px;align-content:start}
+.thumbs figure{margin:0}
+.thumbs img{width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:8px;display:block}
+.thumbs figcaption{font-size:12px;color:var(--muted);margin-top:4px}
+.group{margin-top:22px}
+.group h3{font-family:var(--f-mono);font-size:11.5px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
+ul.links{list-style:none;margin:0;padding:0;background:var(--surface);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+ul.links li{display:grid;grid-template-columns:168px minmax(0,1fr) auto;gap:18px;align-items:center;padding:12px 14px}
+.thumb{display:block;border-radius:8px;overflow:hidden;border:1px solid var(--line);background:var(--chip)}
+.thumb img{display:block;width:100%;aspect-ratio:16/10;object-fit:cover;transition:transform .25s ease}
+ul.links li:hover .thumb img{transform:scale(1.04)}
+.meta{display:flex;flex-direction:column;align-items:flex-start;gap:6px;min-width:0}
+.open{font-size:13px;font-weight:600;text-decoration:none;white-space:nowrap;padding:8px 14px;border-radius:8px;background:var(--c);color:var(--bg)}
+.open:hover{filter:brightness(1.08)}
+.open:focus-visible{outline:2px solid var(--c);outline-offset:2px}
+ul.links li+li{border-top:1px solid var(--line)}
+ul.links li:hover{background:var(--chip)}
+.kind{font-family:var(--f-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;padding:3px 7px;border-radius:4px;background:var(--chip);color:var(--muted);justify-self:start;white-space:nowrap}
+.kind.live{color:var(--ok)}
+.txt{min-width:0}
+.txt a{font-weight:600;text-decoration:none}
+.txt a:hover{text-decoration:underline;text-decoration-color:var(--c);text-underline-offset:3px}
+.txt small{display:block;color:var(--muted);font-size:13.5px}
+.txt code{display:block;font-family:var(--f-mono);font-size:11.5px;color:var(--muted);overflow-wrap:anywhere;margin-top:2px}
+.copy{font:inherit;font-size:12.5px;font-weight:600;padding:6px 10px;border-radius:6px;border:1px solid var(--line);background:var(--surface);color:var(--fg);cursor:pointer;white-space:nowrap}
+.copy:hover{border-color:var(--c)}
+.copy.done{color:var(--ok);border-color:var(--ok)}
+.empty{display:none;padding:24px;color:var(--muted)}
+footer{margin-top:64px;padding-top:20px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}
+@media (max-width:860px){.layout{grid-template-columns:minmax(0,1fr)}nav.rail{position:static;flex-direction:row;flex-wrap:wrap}.rail .lbl{width:100%}.media{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:620px){ul.links li{grid-template-columns:112px minmax(0,1fr)}ul.links .open{grid-column:2;justify-self:start}.txt small{display:none}}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div>
+      <h1>Project Link Hub</h1>
+      <p>Every live demo, prototype, board and handoff for the Agent Operations Theater, HoyOS and Between Gigs, in one place. Open any page from its row.</p>
+    </div>
+    <div class="tools">
+      <input id="q" class="search" type="search" placeholder="Filter links, e.g. board, Figma, backend" aria-label="Filter links">
+      <button id="copyAll" class="btn" type="button">Copy every link</button>
+    </div>
+  </header>
+
+  <div class="layout">
+    <nav class="rail" aria-label="Projects">
+      <div class="lbl">Projects</div>
+      <a href="#theater" style="--c:var(--theater)"><b><i></i>Agent Theater</b><span data-count="theater"></span></a>
+      <a href="#hoy" style="--c:var(--hoy)"><b><i></i>HoyOS</b><span data-count="hoy"></span></a>
+      <a href="#gigs" style="--c:var(--gigs)"><b><i></i>Between Gigs</b><span data-count="gigs"></span></a>
+    </nav>
+
+    <main>
+      <section class="proj" id="theater" style="--c:var(--theater)">
+        <div class="ph">
+          <div>
+            <div class="kick">Concept · 3D</div>
+            <h2>Agent Operations Theater</h2>
+            <p>A cinematic room where AI agents work at their desks (Publishing, Video, Manufacturing, Merchandising, Secret keys) and feed the Scene Engine on the big screen.</p>
+          </div>
+          <div class="acts">
+            <a class="primary" href="https://claude.ai/artifact/31wzfFRSScYzrLUYq4sp9p" target="_blank" rel="noopener">Open the 3D demo ↗</a>
+            <button class="btn copy-proj" type="button" data-proj="theater">Copy links</button>
+          </div>
+        </div>
+        <div class="media">
+          <div>
+            <video controls playsinline preload="metadata" poster="media/blender-hero.jpg" src="media/agent-theater-concept.mp4"></video>
+            <div class="vcap">Motion preview, about 55 seconds: fly-through, each desk, the Scene Engine and speak-to-edit.</div>
+          </div>
+          <div class="thumbs">
+            <figure><img src="media/blender-hero.jpg" alt="Wide ray-traced view of the theater with the big screen" loading="lazy"><figcaption>Ray-traced hero</figcaption></figure>
+            <figure><img src="media/blender-screen.jpg" alt="Low angle up at the Scene Engine screen" loading="lazy"><figcaption>Scene Engine screen</figcaption></figure>
+            <figure><img src="media/frame-06-merchandising.jpg" alt="Merchandising agent reviewing a store grid" loading="lazy"><figcaption>Merchandising desk</figcaption></figure>
+            <figure><img src="media/frame-08-speak-to-edit.jpg" alt="Speak to edit: a screen changing a bottle by voice" loading="lazy"><figcaption>Speak to edit</figcaption></figure>
+          </div>
+        </div>
+        <div class="group">
+          <h3>Demo and design</h3>
+          <ul class="links">
+            <li><a class="thumb" href="https://claude.ai/artifact/31wzfFRSScYzrLUYq4sp9p" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="media/thumbs/theater.jpg" alt="" loading="lazy"></a><span class="meta"><span class="kind live">Live</span><span class="txt"><a href="https://claude.ai/artifact/31wzfFRSScYzrLUYq4sp9p" target="_blank" rel="noopener">Agent Operations Theater, 3D demo</a><small>Orbit the room, open any desk's screen, zoom in, run commands, storyboard and ray-traced render gallery. Vault, Book and Research prototypes open from its top bar.</small><code>claude.ai/artifact/31wzfFRSScYzrLUYq4sp9p</code></span></span><a class="open" href="https://claude.ai/artifact/31wzfFRSScYzrLUYq4sp9p" target="_blank" rel="noopener">Open ↗</a></li>
+            <li><a class="thumb" href="https://www.figma.com/design/zGxDXVrTIXqExjmspvfm8G" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="media/thumbs/figma.jpg" alt="" loading="lazy"></a><span class="meta"><span class="kind">Figma</span><span class="txt"><a href="https://www.figma.com/design/zGxDXVrTIXqExjmspvfm8G" target="_blank" rel="noopener">Theater concept renders</a><small>The AI-generated hero and desk frames, in the Client Projects team.</small><code>figma.com/design/zGxDXVrTIXqExjmspvfm8G</code></span></span><a class="open" href="https://www.figma.com/design/zGxDXVrTIXqExjmspvfm8G" target="_blank" rel="noopener">Open ↗</a></li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="proj" id="hoy" style="--c:var(--hoy)">
+        <div class="ph">
+          <div>
+            <div class="kick">Product · opens 30 Oct 2026</div>
+            <h2>HoyOS</h2>
+            <p>The member platform for HOY Wellness in Medellín, polished in the "Pulso Luxe" direction: bento tiles, invitation-style serif, member card.</p>
+          </div>
+          <div class="acts">
+            <a class="primary" href="https://hoy-human-club.github.io/Hoy-2.0/" target="_blank" rel="noopener">Open the live site ↗</a>
+            <button class="btn copy-proj" type="button" data-proj="hoy">Copy links</button>
+          </div>
+        </div>
+        <div class="group">
+          <h3>Live and source</h3>
+          <ul class="links">
+            <li><a class="thumb" href="https://hoy-human-club.github.io/Hoy-2.0/" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="media/thumbs/hoylive.jpg" alt="" loading="lazy"></a><span class="meta"><span class="kind live">Live</span><span class="txt"><a href="https://hoy-human-club.github.io/Hoy-2.0/" target="_blank" rel="noopener">HoyOS live site</a><small>Coming-soon page at the root; the member hub is at #/hub.</small><code>hoy-human-club.github.io/Hoy-2.0</code></span></span><a class="open" href="https://hoy-human-club.github.io/Hoy-2.0/" target="_blank" rel="noopener">Open ↗</a></li>
+            <li><a class="thumb" href="https://github.com/hoy-human-club/Hoy-2.0" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="media/thumbs/repo.jpg" alt="" loading="lazy"></a><span class="meta"><span class="kind">Repo</span><span class="txt"><a href="https://github.com/hoy-human-club/Hoy-2.0" target="_blank" rel="noopener">Hoy-2.0 on GitHub</a><small>Source code and changelogs.</small><code>github.com/hoy-human-club/Hoy-2.0</code></span></span><a class="open" href="https://github.com/hoy-human-club/Hoy-2.0" target="_blank" rel="noopener">Open ↗</a></li>
+          </ul>
+        </div>
+        <div class="group">
+          <h3>Planning</h3>
+          <ul class="links">
+            <li><a class="thumb" href="https://claude.ai/artifact/DHwnH2ugAxvfgKxMRUK3W3" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="media/thumbs/board.jpg" alt="" loading="lazy"></a><span class="meta"><span class="kind">Board</span><span class="txt"><a href="https://claude.ai/artifact/DHwnH2ugAxvfgKxMRUK3W3" target="_blank" rel="noopener">HoyOS Project Board</a><small>Kanban of every task from the dev log and the UI polish work.</small><code>claude.ai/artifact/DHwnH2ugAxvfgKxMRUK3W3</code></span></span><a class="open" href="https://claude.ai/artifact/DHwnH2ugAxvfgKxMRUK3W3" target="_blank" rel="noopener">Open ↗</a></li>
+            <li><a class="thumb" href="https://docs.google.com/spreadsheets/d/19SWDF957P55Iw5QEPyVtoPDS50-eor0k76djVv1YyNU/edit" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="media/thumbs/sheet.jpg" alt="" loading="lazy"></a><span class="meta"><span class="kind">Sheet</span><span class="txt"><a href="https://docs.google.com/spreadsheets/d/19SWDF957P55Iw5QEPyVtoPDS50-eor0k76djVv1YyNU/edit" target="_blank" rel="noopener">HOY Front End Dev Log</a><small>Features, agreed rules, decisions, questions and owners.</small><code>docs.google.com/spreadsheets/d/19SWDF957P55…</code></span></span><a class="open" href="https://docs.google.com/spreadsheets/d/19SWDF957P55Iw5QEPyVtoPDS50-eor0k76djVv1YyNU/edit" target="_blank" rel="noopener">Open ↗</a></li>
+            <li><a class="thumb" href="https://claude.ai/artifact/9XqpR1hn31HXzsoi9Ckz2J" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="media/thumbs/plan.jpg" alt="" loading="lazy"></a><span class="meta"><span class="kind">Plan</span><span class="txt"><a href="https://claude.ai/artifact/9XqpR1hn31HXzsoi9Ckz2J" target="_blank" rel="noopener">Hoy UI Polish Plan</a><small>What the polish pass covers and in what order.</small><code>claude.ai/artifact/9XqpR1hn31HXzsoi9Ckz2J</code></span></span><a class="open" href="https://claude.ai/artifact/9XqpR1hn31HXzsoi9Ckz2J" target="_blank" rel="noopener">Open ↗</a></li>
+          </ul>
+        </div>
+        <div class="group">
+          <h3>Design</h3>
+          <ul class="links">
+            <li><a class="thumb" href="https://claude.ai/artifact/B9jAL3bAv4cvVqyDH3r7YN" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="media/thumbs/designsystem.jpg" alt="" loading="lazy"></a><span class="meta"><span class="kind">System</span><span class="txt"><a href="https://claude.ai/artifact/B9jAL3bAv4cvVqyDH3r7YN" target="_blank" rel="noopener">HOY Design System</a><small>Colors, type, spacing and components.</small><code>claude.ai/artifact/B9jAL3bAv4cvVqyDH3r7YN</code></span></span><a class="open" href="https://claude.ai/artifact/B9jAL3bAv4cvVqyDH3r7YN" target="_blank" rel="noopener">Open ↗</a></li>
+            <li><a class="thumb" href="https://claude.ai/artifact/ALFRDuCD9KQupHq5X31an3" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="media/thumbs/directions.jpg" alt="" loading="lazy"></a><span class="meta"><span class="kind">Design</span><span class="txt"><a href="https://claude.ai/artifact/ALFRDuCD9KQupHq5X31an3" target="_blank" rel="noopener">Hoy Bold Directions</a><small>The visual directions explored, including Pulso and Pulso Luxe.</small><code>claude.ai/artifact/ALFRDuCD9KQupHq5X31an3</code></span></span><a class="open" href="https://claude.ai/artifact/ALFRDuCD9KQupHq5X31an3" target="_blank" rel="noopener">Open ↗</a></li>
+            <li><a class="thumb" href="https://claude.ai/artifact/SRYqKJY92QxxE2j2UEY5Pw" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="media/thumbs/beforeafter.jpg" alt="" loading="lazy"></a><span class="meta"><span class="kind">Design</span><span class="txt"><a href="https://claude.ai/artifact/SRYqKJY92QxxE2j2UEY5Pw" target="_blank" rel="noopener">Hoy Before and After</a><small>Screens before and after the polish.</small><code>claude.ai/artifact/SRYqKJY92QxxE2j2UEY5Pw</code></span></span><a class="open" href="https://claude.ai/artifact/SRYqKJY92QxxE2j2UEY5Pw" target="_blank" rel="noopener">Open ↗</a></li>
+            <li><a class="thumb" href="https://claude.ai/artifact/JJsBP3BBLn6ij8HPeoqdTn" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="media/thumbs/studio.jpg" alt="" loading="lazy"></a><span class="meta"><span class="kind">Design</span><span class="txt"><a href="https://claude.ai/artifact/JJsBP3BBLn6ij8HPeoqdTn" target="_blank" rel="noopener">HoyOS Studio UI</a><small>Studio screens.</small><code>claude.ai/artifact/JJsBP3BBLn6ij8HPeoqdTn</code></span></span><a class="open" href="https://claude.ai/artifact/JJsBP3BBLn6ij8HPeoqdTn" target="_blank" rel="noopener">Open ↗</a></li>
+            <li><a class="thumb" href="https://claude.ai/artifact/6k2Js1nkt6RxvJqPWVf21m" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="media/thumbs/hublayouts.jpg" alt="" loading="lazy"></a><span class="meta"><span class="kind">Design</span><span class="txt"><a href="https://claude.ai/artifact/6k2Js1nkt6RxvJqPWVf21m" target="_blank" rel="noopener">HoyOS Hub Layouts</a><small>Layout options for the member hub.</small><code>claude.ai/artifact/6k2Js1nkt6RxvJqPWVf21m</code></span></span><a class="open" href="https://claude.ai/artifact/6k2Js1nkt6RxvJqPWVf21m" target="_blank" rel="noopener">Open ↗</a></li>
+            <li><a class="thumb" href="https://claude.ai/artifact/9RNgm28PQLmVknbhJKgH7e" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="media/thumbs/nav.jpg" alt="" loading="lazy"></a><span class="meta"><span class="kind">Map</span><span class="txt"><a href="https://claude.ai/artifact/9RNgm28PQLmVknbhJKgH7e" target="_blank" rel="noopener">HoyOS Navigation Architecture</a><small>How the sections and screens connect.</small><code>claude.ai/artifact/9RNgm28PQLmVknbhJKgH7e</code></span></span><a class="open" href="https://claude.ai/artifact/9RNgm28PQLmVknbhJKgH7e" target="_blank" rel="noopener">Open ↗</a></li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="proj" id="gigs" style="--c:var(--gigs)">
+        <div class="ph">
+          <div>
+            <div class="kick">Product · 2.0 in progress</div>
+            <h2>Between Gigs</h2>
+            <p>The Between Gigs platform, its showcase, and the 2.0 build and backend plans.</p>
+          </div>
+          <div class="acts">
+            <a class="primary" href="https://claude.ai/artifact/M1HkYCw2q9NUwsJR2UuhJS" target="_blank" rel="noopener">Open Between Gigs ↗</a>
+            <button class="btn copy-proj" type="button" data-proj="gigs">Copy links</button>
+          </div>
+        </div>
+        <div class="group">
+          <h3>Product</h3>
+          <ul class="links">
+            <li><a class="thumb" href="https://claude.ai/artifact/M1HkYCw2q9NUwsJR2UuhJS" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="media/thumbs/gigs.jpg" alt="" loading="lazy"></a><span class="meta"><span class="kind live">Live</span><span class="txt"><a href="https://claude.ai/artifact/M1HkYCw2q9NUwsJR2UuhJS" target="_blank" rel="noopener">Between Gigs</a><small>The main Between Gigs page.</small><code>claude.ai/artifact/M1HkYCw2q9NUwsJR2UuhJS</code></span></span><a class="open" href="https://claude.ai/artifact/M1HkYCw2q9NUwsJR2UuhJS" target="_blank" rel="noopener">Open ↗</a></li>
+            <li><a class="thumb" href="https://claude.ai/artifact/PeKLG7ZqyXkrSuAcrdp3Qk" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="media/thumbs/showcase.jpg" alt="" loading="lazy"></a><span class="meta"><span class="kind">Showcase</span><span class="txt"><a href="https://claude.ai/artifact/PeKLG7ZqyXkrSuAcrdp3Qk" target="_blank" rel="noopener">Between Gigs Showcase</a><small>A walkthrough of what Between Gigs does.</small><code>claude.ai/artifact/PeKLG7ZqyXkrSuAcrdp3Qk</code></span></span><a class="open" href="https://claude.ai/artifact/PeKLG7ZqyXkrSuAcrdp3Qk" target="_blank" rel="noopener">Open ↗</a></li>
+          </ul>
+        </div>
+        <div class="group">
+          <h3>2.0 build</h3>
+          <ul class="links">
+            <li><a class="thumb" href="https://claude.ai/artifact/MFceo2r6UvnAjrZjLgMgQV" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="media/thumbs/buildmap.jpg" alt="" loading="lazy"></a><span class="meta"><span class="kind">Plan</span><span class="txt"><a href="https://claude.ai/artifact/MFceo2r6UvnAjrZjLgMgQV" target="_blank" rel="noopener">Between Gigs 2.0 Build Map</a><small>What gets built for 2.0 and in what order.</small><code>claude.ai/artifact/MFceo2r6UvnAjrZjLgMgQV</code></span></span><a class="open" href="https://claude.ai/artifact/MFceo2r6UvnAjrZjLgMgQV" target="_blank" rel="noopener">Open ↗</a></li>
+            <li><a class="thumb" href="https://claude.ai/artifact/5zJN5m7GueUd9u9cb8fduj" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="media/thumbs/handoff.jpg" alt="" loading="lazy"></a><span class="meta"><span class="kind">Handoff</span><span class="txt"><a href="https://claude.ai/artifact/5zJN5m7GueUd9u9cb8fduj" target="_blank" rel="noopener">Between Gigs 2.0 Backend Handoff</a><small>What the backend needs to deliver for 2.0.</small><code>claude.ai/artifact/5zJN5m7GueUd9u9cb8fduj</code></span></span><a class="open" href="https://claude.ai/artifact/5zJN5m7GueUd9u9cb8fduj" target="_blank" rel="noopener">Open ↗</a></li>
+          </ul>
+        </div>
+      </section>
+      <p class="empty" id="empty">No links match that filter.</p>
+    </main>
+  </div>
+
+  <footer>Each link opens for anyone only when that page is shared as "Anyone with the link". Updated 27 October 2026.</footer>
+</div>
+
+<script>
+(function(){
+  function copyText(text, btn, label){
+    function ok(){ btn.classList.add('done'); btn.textContent='Copied'; setTimeout(function(){ btn.classList.remove('done'); btn.textContent=label; },1400); }
+    function fail(){ btn.textContent='Copy failed, link shown'; }
+    try{ navigator.clipboard.writeText(text).then(ok,fail); }catch(e){ fail(); }
+  }
+  function rowLine(li){ var a=li.querySelector('.txt a'); return a.textContent.trim()+': '+a.href; }
+  document.querySelectorAll('.copy-proj').forEach(function(b){
+    b.addEventListener('click',function(){
+      var s=document.getElementById(b.dataset.proj);
+      var lines=[s.querySelector('h2').textContent].concat([].map.call(s.querySelectorAll('ul.links li'),rowLine));
+      copyText(lines.join('\n'),b,'Copy links');
+    });
+  });
+  document.getElementById('copyAll').addEventListener('click',function(e){
+    var out=[].map.call(document.querySelectorAll('section.proj'),function(s){
+      return [s.querySelector('h2').textContent].concat([].map.call(s.querySelectorAll('ul.links li'),rowLine)).join('\n');
+    });
+    copyText(out.join('\n\n'),e.currentTarget,'Copy every link');
+  });
+  function counts(){
+    document.querySelectorAll('[data-count]').forEach(function(n){
+      var s=document.getElementById(n.dataset.count);
+      n.textContent=[].filter.call(s.querySelectorAll('ul.links li'),function(li){return !li.hidden;}).length;
+    });
+  }
+  var q=document.getElementById('q');
+  q.addEventListener('input',function(){
+    var t=q.value.trim().toLowerCase(), any=false;
+    document.querySelectorAll('section.proj').forEach(function(s){
+      var vis=0;
+      s.querySelectorAll('.group').forEach(function(g){
+        var gv=0;
+        g.querySelectorAll('ul.links li').forEach(function(li){
+          var hit=!t || (li.textContent+' '+s.querySelector('h2').textContent).toLowerCase().indexOf(t)>-1;
+          li.hidden=!hit; if(hit) gv++;
+        });
+        g.hidden=!gv; vis+=gv;
+      });
+      var m=s.querySelector('.media'); if(m) m.hidden=!!t;
+      s.hidden=!vis; if(vis) any=true;
+    });
+    document.getElementById('empty').style.display=any?'none':'block';
+    counts();
+  });
+  counts();
+})();
+</script>
+
+</body></html>

@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Studio Vault</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@500;700&family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a tool. Header with the demo warning, desk filter rail, the secrets table, then add form and the hash-chained ledger side by side. */
+:root{
+  --void:#060b11; --hull:#0c1722; --panel:#101e2b; --line:#1d3245;
+  --ink:#e6eef5; --ink-2:#97abbd; --ink-3:#61778a; --cyan:#4fb6f0; --amber:#efa13a; --mint:#2fc191; --rose:#e56a98;
+  --f-display:"Syne","Segoe UI",system-ui,sans-serif; --f-body:"IBM Plex Sans","Segoe UI",system-ui,sans-serif; --f-mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{background:var(--void);color:var(--ink);margin:0}
+body{font-family:var(--f-body);font-size:15px;line-height:1.55;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 64px}
+a{color:var(--cyan)}
+:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+.wrap{max-width:1180px;margin:0 auto;display:flex;flex-direction:column;gap:22px}
+.top{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:flex-end;justify-content:space-between}
+.back{font-family:var(--f-mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;text-decoration:none}
+.eyebrow{font-family:var(--f-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--amber)}
+h1{font-family:var(--f-display);font-weight:700;font-size:clamp(28px,4.5vw,44px);line-height:1.05;margin:6px 0 0}
+h2{font-family:var(--f-display);font-weight:500;font-size:19px;margin:0}
+p{margin:0;color:var(--ink-2)}
+.warn{display:flex;gap:10px;align-items:flex-start;background:rgba(239,161,58,.08);border:1px solid rgba(239,161,58,.45);border-radius:8px;padding:10px 14px;color:var(--ink);font-size:14px;max-width:560px}
+.warn b{color:var(--amber);font-weight:500}
+.stats{display:flex;flex-wrap:wrap;gap:10px}
+.stat{background:var(--hull);border:1px solid var(--line);border-radius:8px;padding:8px 14px;min-width:120px}
+.stat b{display:block;font-family:var(--f-display);font-size:22px;font-weight:500;font-variant-numeric:tabular-nums}
+.stat span{font-size:12px;color:var(--ink-3)}
+.rail{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.rail span{font-family:var(--f-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);margin-right:4px}
+.chip{font:12px var(--f-mono);color:var(--ink-2);background:var(--hull);border:1px solid var(--line);border-radius:999px;padding:5px 11px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.chip i{width:8px;height:8px;border-radius:50%;background:var(--c,var(--ink-3))}
+.chip[aria-pressed="true"]{color:var(--ink);border-color:var(--c,var(--cyan));background:var(--panel)}
+.card{background:var(--hull);border:1px solid var(--line);border-radius:12px;min-width:0}
+.card-head{display:flex;flex-wrap:wrap;gap:8px;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid var(--line)}
+.table-wrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:760px;font-size:14px}
+th,td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--line);vertical-align:middle}
+th{font-family:var(--f-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);font-weight:400}
+tr:last-child td{border-bottom:0}
+td.name{font-family:var(--f-mono);color:var(--ink)}
+td.val{font-family:var(--f-mono);color:var(--ink-2);font-variant-numeric:tabular-nums;white-space:nowrap}
+td.val.shown{color:var(--amber)}
+.desks{display:flex;flex-wrap:wrap;gap:4px}
+.desk{font:11px var(--f-mono);border:1px solid var(--line);border-radius:999px;padding:2px 8px;color:var(--ink-3);background:transparent;cursor:pointer}
+.desk.on{color:var(--ink);border-color:var(--c);background:color-mix(in srgb,var(--c) 18%,transparent)}
+.age{font-size:13px;color:var(--ink-2);white-space:nowrap}
+.age.old{color:var(--amber)}
+.acts{display:flex;gap:6px;justify-content:flex-end;flex-wrap:nowrap}
+button.btn{font:12px var(--f-mono);letter-spacing:.04em;color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:6px 10px;cursor:pointer;white-space:nowrap}
+button.btn:hover{border-color:var(--cyan)}
+button.btn.primary{background:var(--cyan);border-color:var(--cyan);color:#04121d;font-weight:500}
+button.btn.danger:hover{border-color:var(--rose);color:var(--rose)}
+.split{display:grid;grid-template-columns:minmax(0,380px) minmax(0,1fr);gap:22px;align-items:start}
+form{display:flex;flex-direction:column;gap:12px;padding:16px}
+label.f{display:flex;flex-direction:column;gap:5px;font-size:13px;color:var(--ink-2)}
+input[type=text]{background:var(--void);color:var(--ink);border:1px solid var(--line);border-radius:4px;padding:8px 10px;font:14px var(--f-mono)}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.err{color:var(--rose);font-size:13px;min-height:1em}
+.ledger{list-style:none;margin:0;padding:8px 0;max-height:420px;overflow:auto;font-size:13px}
+.ledger li{display:grid;grid-template-columns:30px minmax(0,1fr) auto;gap:10px;padding:8px 16px;border-bottom:1px dashed var(--line);align-items:baseline}
+.ledger li .i{font-family:var(--f-mono);color:var(--ink-3)}
+.ledger li .what b{color:var(--ink);font-weight:500}
+.ledger li .what small{display:block;font-family:var(--f-mono);font-size:11px;color:var(--ink-3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ledger li .t{font-size:12px;color:var(--ink-3);white-space:nowrap}
+.ledger li.bad{background:rgba(229,106,152,.1)}
+.ledger li.bad .what small{color:var(--rose)}
+.chain{font-family:var(--f-mono);font-size:12px}
+.chain.ok{color:var(--mint)} .chain.broken{color:var(--rose)}
+.confirm{display:flex;gap:6px;align-items:center;font-size:12px;color:var(--rose)}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--mint);color:#04121d;font-weight:500;padding:9px 16px;border-radius:999px;z-index:10;font-size:14px}
+@media (max-width:860px){.split{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="./">← Back to the theater</a>
+
+  <div class="top">
+    <div>
+      <div class="eyebrow">Secret keys desk · clickable prototype</div>
+      <h1>Studio Vault</h1>
+      <p style="max-width:60ch;margin-top:8px">One locked safe for every password and API key. Each desk only sees the keys it needs, keys rotate in one click, and every action is written to a ledger that can't be quietly changed.</p>
+    </div>
+    <div class="warn" role="note"><span>⚠</span><span><b>Demo only.</b> Every value here is fake and generated in your browser. Don't type real keys into this prototype.</span></div>
+  </div>
+
+  <div class="stats" id="stats"></div>
+
+  <div class="rail" id="rail"><span>Show keys for</span></div>
+
+  <section class="card" aria-labelledby="secretsTitle">
+    <div class="card-head"><h2 id="secretsTitle">Secrets</h2><span class="age" id="filterNote"></span></div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Name</th><th>Value</th><th>Desks that can use it</th><th>Last rotated</th><th style="text-align:right">Actions</th></tr></thead>
+      <tbody id="rows"></tbody>
+    </table></div>
+  </section>
+
+  <div class="split">
+    <section class="card" aria-labelledby="addTitle">
+      <div class="card-head"><h2 id="addTitle">Add a secret</h2></div>
+      <form id="addForm" novalidate>
+        <label class="f">Name <input type="text" id="fName" placeholder="SHOPIFY_API" autocomplete="off"></label>
+        <label class="f">Value
+          <span class="row"><input type="text" id="fVal" placeholder="Press Generate" autocomplete="off" style="flex:1;min-width:0" readonly><button type="button" class="btn" id="gen">Generate</button></span>
+        </label>
+        <div class="f" style="font-size:13px;color:var(--ink-2)">Desks that can use it<div class="desks" id="fDesks" style="margin-top:6px"></div></div>
+        <div class="err" id="fErr" aria-live="polite"></div>
+        <div class="row"><button type="submit" class="btn primary">Seal in vault</button><button type="button" class="btn" id="resetDemo">Reset demo</button></div>
+      </form>
+    </section>
+
+    <section class="card" aria-labelledby="ledgerTitle">
+      <div class="card-head">
+        <h2 id="ledgerTitle">Ledger</h2>
+        <div class="row"><span class="chain" id="chain">Checking…</span><button type="button" class="btn" id="verify">Verify chain</button><button type="button" class="btn danger" id="tamper">Tamper with an entry</button></div>
+      </div>
+      <p style="padding:10px 16px 0;font-size:13px">Each entry stores the fingerprint (SHA-256) of the one before it, like a blockchain. Change any old entry and every fingerprint after it stops matching.</p>
+      <ol class="ledger" id="ledger" reversed></ol>
+    </section>
+  </div>
+</div>
+
+<script>
+(function(){
+const $=id=>document.getElementById(id);
+const DESKS=[{id:'publishing',n:'Publishing',c:'#8f86f0'},{id:'video',n:'Video',c:'#f06a3c'},{id:'manufacturing',n:'Manufacturing',c:'#2fc191'},{id:'merch',n:'Merchandising',c:'#e56a98'},{id:'keys',n:'Secret keys',c:'#efa13a'}];
+const KEY='studio-vault-demo-v1';
+const rnd=n=>Array.from(crypto.getRandomValues(new Uint8Array(n)),b=>b.toString(16).padStart(2,'0')).join('');
+const fake=()=>'demo_'+rnd(12);
+const DAY=864e5;
+function seed(){const now=Date.now();return {secrets:[
+  {name:'PAYMENTS_SECRET',val:fake(),desks:['merch'],rot:now-2*DAY},
+  {name:'MODEL_ROUTER_API',val:fake(),desks:['publishing','video','manufacturing','merch'],rot:now-9*DAY},
+  {name:'BACKEND_PROJECT',val:fake(),desks:['publishing','merch'],rot:now-31*DAY},
+  {name:'DAVINCI_MCP',val:fake(),desks:['video'],rot:now-4*DAY},
+  {name:'RIVE_CLI_TOKEN',val:fake(),desks:['video'],rot:now-1*DAY},
+  {name:'BLENDER_MCP',val:fake(),desks:['manufacturing'],rot:now-47*DAY},
+  {name:'SITE_PUBLISH_TOKEN',val:fake(),desks:['publishing'],rot:now-12*DAY}],ledger:[]};}
+let S;try{S=JSON.parse(localStorage.getItem(KEY));}catch(e){S=null;}
+const fresh=!S||!S.secrets;if(fresh)S=seed();
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}};
+let filter=null,shown={},confirmDel=null;
+
+async function sha(s){const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s));return Array.from(new Uint8Array(b),x=>x.toString(16).padStart(2,'0')).join('');}
+const body=e=>[e.i,e.t,e.actor,e.action,e.secret,e.prev].join('|');
+async function log(actor,action,secret){const prev=S.ledger.length?S.ledger[S.ledger.length-1].hash:'0'.repeat(64);
+  const e={i:S.ledger.length+1,t:Date.now(),actor,action,secret,prev};e.hash=await sha(body(e));S.ledger.push(e);save();renderLedger();verify();}
+async function verify(){let ok=true,bad=new Set(),prev='0'.repeat(64);
+  for(const e of S.ledger){const h=await sha(body(e));if(e.prev!==prev||h!==e.hash){ok=false;bad.add(e.i);}prev=e.hash;}
+  const c=$('chain');c.className='chain '+(ok?'ok':'broken');c.textContent=ok?'✓ Chain intact · '+S.ledger.length+' entries':'✗ Chain broken at entry '+Math.min(...bad);
+  document.querySelectorAll('#ledger li').forEach(li=>li.classList.toggle('bad',bad.has(+li.dataset.i)));return ok;}
+
+const ago=t=>{const d=Math.floor((Date.now()-t)/DAY);return d<1?'today':d===1?'1 day ago':d+' days ago';};
+const deskOf=id=>DESKS.find(d=>d.id===id);
+function toast(m){const t=document.createElement('div');t.className='toast';t.setAttribute('role','status');t.textContent=m;document.body.appendChild(t);setTimeout(()=>t.remove(),1800);}
+
+function renderStats(){const old=S.secrets.filter(s=>Date.now()-s.rot>30*DAY).length;
+  $('stats').innerHTML=[[S.secrets.length,'secrets sealed'],[DESKS.length,'desks with scoped access'],[old,'need rotating (30+ days)'],[S.ledger.length,'ledger entries']].map(([b,s])=>'<div class="stat"><b>'+b+'</b><span>'+s+'</span></div>').join('');}
+function renderRail(){const r=$('rail');r.querySelectorAll('.chip').forEach(c=>c.remove());
+  [{id:null,n:'All desks',c:'#4fb6f0'},...DESKS].forEach(d=>{const b=document.createElement('button');b.type='button';b.className='chip';b.style.setProperty('--c',d.c);b.setAttribute('aria-pressed',String(filter===d.id));b.innerHTML='<i></i>'+d.n;b.onclick=()=>{filter=d.id;renderRail();renderRows();};r.appendChild(b);});}
+function renderRows(){const list=S.secrets.filter(s=>!filter||s.desks.includes(filter));
+  $('filterNote').textContent=filter?deskOf(filter).n+' desk can use '+list.length+' of '+S.secrets.length+' secrets':'';
+  $('rows').innerHTML=list.length?list.map(s=>{const i=S.secrets.indexOf(s),old=Date.now()-s.rot>30*DAY;
+    const desks=DESKS.map(d=>'<button type="button" class="desk'+(s.desks.includes(d.id)?' on':'')+'" style="--c:'+d.c+'" data-scope="'+i+'" data-desk="'+d.id+'" aria-pressed="'+s.desks.includes(d.id)+'" title="Toggle '+d.n+' access">'+d.n+'</button>').join('');
+    const acts=confirmDel===i?'<span class="confirm">Delete for good?<button type="button" class="btn danger" data-del2="'+i+'">Delete</button><button type="button" class="btn" data-cancel>Keep</button></span>'
+      :'<button type="button" class="btn" data-reveal="'+i+'">'+(shown[s.name]?'Hide':'Reveal')+'</button><button type="button" class="btn" data-rotate="'+i+'">Rotate</button><button type="button" class="btn danger" data-del="'+i+'">Delete</button>';
+    return '<tr><td class="name">'+s.name+'</td><td class="val'+(shown[s.name]?' shown':'')+'">'+(shown[s.name]?s.val:'••••••••'+s.val.slice(-4))+'</td><td><div class="desks">'+desks+'</div></td><td class="age'+(old?' old':'')+'">'+ago(s.rot)+(old?' · rotate soon':'')+'</td><td><div class="acts">'+acts+'</div></td></tr>';}).join('')
+    :'<tr><td colspan="5" style="color:var(--ink-3)">No secrets for this desk yet. Add one below and give this desk access.</td></tr>';
+  renderStats();}
+function renderLedger(){$('ledger').innerHTML=S.ledger.slice().reverse().map(e=>'<li data-i="'+e.i+'"><span class="i">'+e.i+'</span><span class="what"><b>'+e.actor+'</b> '+e.action+' <b>'+e.secret+'</b><small>hash '+e.hash.slice(0,16)+'… ← prev '+e.prev.slice(0,8)+'…</small></span><span class="t">'+new Date(e.t).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})+'</span></li>').join('');}
+function renderForm(){$('fDesks').innerHTML=DESKS.map(d=>'<button type="button" class="desk" style="--c:'+d.c+'" data-fdesk="'+d.id+'" aria-pressed="false">'+d.n+'</button>').join('');}
+
+document.addEventListener('click',async e=>{const b=e.target.closest('button');if(!b)return;
+  if(b.dataset.reveal!==undefined){const s=S.secrets[+b.dataset.reveal];shown[s.name]=!shown[s.name];renderRows();if(shown[s.name]){await log('You','revealed',s.name);setTimeout(()=>{shown[s.name]=false;renderRows();},6000);}}
+  else if(b.dataset.rotate!==undefined){const s=S.secrets[+b.dataset.rotate];s.val=fake();s.rot=Date.now();shown[s.name]=false;save();renderRows();await log('Secret keys agent','rotated',s.name);toast(s.name+' rotated');}
+  else if(b.dataset.scope!==undefined){const s=S.secrets[+b.dataset.scope],d=b.dataset.desk,on=s.desks.includes(d);s.desks=on?s.desks.filter(x=>x!==d):[...s.desks,d];save();renderRows();await log('You',(on?'removed '+deskOf(d).n+' access to':'gave '+deskOf(d).n+' access to'),s.name);}
+  else if(b.dataset.del!==undefined){confirmDel=+b.dataset.del;renderRows();}
+  else if(b.dataset.cancel!==undefined){confirmDel=null;renderRows();}
+  else if(b.dataset.del2!==undefined){const s=S.secrets.splice(+b.dataset.del2,1)[0];confirmDel=null;save();renderRows();await log('You','deleted',s.name);toast(s.name+' deleted');}
+  else if(b.dataset.fdesk!==undefined){const on=b.getAttribute('aria-pressed')==='true';b.setAttribute('aria-pressed',String(!on));b.classList.toggle('on',!on);}
+});
+$('gen').onclick=()=>{$('fVal').value=fake();$('fErr').textContent='';};
+['fName'].forEach(id=>$(id).addEventListener('input',()=>{$('fErr').textContent='';}));
+$('addForm').addEventListener('submit',async e=>{e.preventDefault();
+  const name=$('fName').value.trim().toUpperCase().replace(/[\s-]+/g,'_'),val=$('fVal').value,desks=[...document.querySelectorAll('[data-fdesk][aria-pressed="true"]')].map(b=>b.dataset.fdesk);
+  const err=!/^[A-Z][A-Z0-9_]{2,40}$/.test(name)?'Use a name like SHOPIFY_API: letters, numbers and underscores.':S.secrets.some(s=>s.name===name)?'A secret called '+name+' already exists.':!val?'Press Generate to create a demo value.':!desks.length?'Give at least one desk access.':'';
+  if(err){$('fErr').textContent=err;return;}
+  S.secrets.unshift({name,val,desks,rot:Date.now()});save();$('addForm').reset();renderForm();renderRows();await log('You','sealed',name);toast(name+' sealed in the vault');});
+$('verify').onclick=async()=>{const ok=await verify();toast(ok?'Every fingerprint matches':'Tampering detected');};
+$('tamper').onclick=async()=>{if(S.ledger.length<2){toast('Add a few actions first');return;}const e=S.ledger[Math.floor(S.ledger.length/2)-1];e.action='quietly '+e.action.replace(/^quietly /,'');save();renderLedger();await verify();toast('Entry '+e.i+' was changed. Watch the chain break.');};
+$('resetDemo').onclick=async()=>{S=seed();shown={};filter=null;confirmDel=null;save();renderRail();renderRows();renderLedger();await bootLog();toast('Demo reset');};
+async function bootLog(){for(const s of S.secrets)await log('Secret keys agent','sealed',s.name);}
+
+renderRail();renderForm();renderRows();renderLedger();
+(fresh?bootLog():verify());
+})();
+</script>
+</body>
+</html>

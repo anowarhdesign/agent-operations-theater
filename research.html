@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>All-in-One Platforms Brief</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@500;700&family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a single reading column with a four-card comparison and a borrow list. Same dark theater look as the main page. */
+:root{
+  --void:#060b11; --hull:#0c1722; --panel:#101e2b; --line:#1d3245;
+  --ink:#e6eef5; --ink-2:#97abbd; --ink-3:#61778a; --cyan:#4fb6f0; --amber:#efa13a; --mint:#2fc191;
+  --f-display:"Syne","Segoe UI",system-ui,sans-serif; --f-body:"IBM Plex Sans","Segoe UI",system-ui,sans-serif; --f-mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{background:var(--void);color:var(--ink);margin:0}
+body{font-family:var(--f-body);font-size:16px;line-height:1.65;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 64px}
+.wrap{max-width:1040px;margin:0 auto;display:flex;flex-direction:column;gap:40px}
+a{color:var(--cyan)}
+a:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+.back{font-family:var(--f-mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;text-decoration:none}
+.eyebrow{font-family:var(--f-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--cyan)}
+h1{font-family:var(--f-display);font-weight:700;font-size:clamp(30px,5vw,50px);line-height:1.05;margin:8px 0 12px;text-wrap:balance}
+h2{font-family:var(--f-display);font-weight:500;font-size:24px;margin:0 0 14px;text-wrap:balance}
+h3{font-family:var(--f-display);font-weight:500;font-size:19px;margin:0}
+p{margin:0;max-width:68ch;color:var(--ink-2)}
+.lede{font-size:18px;color:var(--ink)}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:14px}
+.card{background:var(--hull);border:1px solid var(--line);border-radius:12px;padding:18px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.card .what{font-family:var(--f-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--amber)}
+.card ul{margin:0;padding-left:18px;color:var(--ink-2);font-size:14px;display:grid;gap:5px}
+.card .take{margin-top:auto;border-top:1px solid var(--line);padding-top:10px;font-size:14px;color:var(--ink)}
+.card .take b{font-weight:500;color:var(--mint)}
+.table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px}
+table{border-collapse:collapse;width:100%;min-width:640px;font-size:14px}
+th,td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--f-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);font-weight:400}
+td:first-child{color:var(--ink);font-weight:500}
+td{color:var(--ink-2)}
+tr:last-child td{border-bottom:0}
+.yes{color:var(--mint)} .part{color:var(--amber)} .no{color:var(--ink-3)}
+ol.borrow{margin:0;padding:0;list-style:none;display:grid;gap:12px;counter-reset:b}
+ol.borrow li{display:grid;grid-template-columns:36px 1fr;gap:12px;background:var(--hull);border:1px solid var(--line);border-radius:10px;padding:14px 16px;counter-increment:b}
+ol.borrow li::before{content:counter(b);font-family:var(--f-display);font-weight:700;font-size:22px;color:var(--cyan);line-height:1.1}
+ol.borrow b{color:var(--ink);font-weight:500}
+ol.borrow span{color:var(--ink-2);font-size:15px}
+.sources{font-size:13px;color:var(--ink-3)}
+.sources a{color:var(--ink-2)}
+.note{font-size:13px;color:var(--ink-3);border-left:2px solid var(--amber);padding-left:12px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="./">← Back to the theater</a>
+
+  <header>
+    <div class="eyebrow">Research brief · 27 Oct 2026</div>
+    <h1>How the all-in-one platforms fit it all in one</h1>
+    <p class="lede">Justin asked how Webflow makes everything one product, and pointed at Stripe Projects, Appwrite and Wix Studio. The short answer: each one owns a single <em>source of truth</em> and bolts every service onto it, so you never leave one place to design, store, host and pay.</p>
+  </header>
+
+  <section>
+    <h2>The four, in one line each</h2>
+    <div class="cards">
+      <article class="card">
+        <span class="what">Provisioning from the terminal</span>
+        <h3>Stripe Projects</h3>
+        <ul>
+          <li>A Stripe CLI plugin that attaches hosting, a database, auth, AI and analytics to a project.</li>
+          <li>Writes the credentials into a local <code>.env</code> and keeps state in <code>.projects/</code>.</li>
+          <li>Can rotate credentials and upgrade tiers; payment method added once.</li>
+          <li>Built to be handed to coding agents.</li>
+        </ul>
+        <p class="take"><b>Borrow:</b> one command spins up the whole stack, and keys never get copied by hand.</p>
+      </article>
+      <article class="card">
+        <span class="what">Open-source backend</span>
+        <h3>Appwrite</h3>
+        <ul>
+          <li>Auth with 30+ sign-in providers, teams and roles.</li>
+          <li>Databases with row-level permissions, file storage, serverless functions.</li>
+          <li>Sites: hosting with SSR, custom domains and DDoS protection.</li>
+          <li>Messaging and a Terraform provider for the whole setup.</li>
+        </ul>
+        <p class="take"><b>Borrow:</b> every service shares one permission model, so access rules are written once.</p>
+      </article>
+      <article class="card">
+        <span class="what">Visual site builder</span>
+        <h3>Webflow</h3>
+        <ul>
+          <li>Design canvas, CMS and hosting in one editor.</li>
+          <li>GSAP-powered interactions, including scroll and text effects.</li>
+          <li>Webflow Cloud runs full-stack Next.js or Astro apps with SQLite, key-value and object storage.</li>
+          <li>Cloud deploys no longer require republishing the site.</li>
+        </ul>
+        <p class="take"><b>Borrow:</b> the design canvas <em>is</em> the source of truth; CMS, motion and hosting read from it.</p>
+      </article>
+      <article class="card">
+        <span class="what">Agency site builder</span>
+        <h3>Wix Studio</h3>
+        <ul>
+          <li>Built for agencies running many client sites.</li>
+          <li>No-code CMS, a built-in IDE and APIs for custom front- and back-end code.</li>
+          <li>Content Mode: clients edit words and images while the design stays locked.</li>
+          <li>Client kits and automatic reports for handoff.</li>
+        </ul>
+        <p class="take"><b>Borrow:</b> a locked "content mode" so a client can edit safely without breaking the design.</p>
+      </article>
+    </div>
+  </section>
+
+  <section>
+    <h2>Side by side</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Piece</th><th>Stripe Projects</th><th>Appwrite</th><th>Webflow</th><th>Wix Studio</th></tr></thead>
+        <tbody>
+          <tr><td>Visual design</td><td class="no">No</td><td class="no">No</td><td class="yes">Yes, core</td><td class="yes">Yes, core</td></tr>
+          <tr><td>CMS / content</td><td class="no">No</td><td class="part">Database, no editor</td><td class="yes">Yes</td><td class="yes">Yes, no-code</td></tr>
+          <tr><td>Auth</td><td class="part">Provisions a provider</td><td class="yes">Yes, built in</td><td class="part">Via Cloud apps</td><td class="part">Members</td></tr>
+          <tr><td>Hosting</td><td class="part">Provisions a provider</td><td class="yes">Sites</td><td class="yes">Yes, plus Cloud</td><td class="yes">Yes</td></tr>
+          <tr><td>Secrets / keys</td><td class="yes">Synced to .env, rotate</td><td class="part">API keys per project</td><td class="part">Cloud env vars</td><td class="part">Secrets manager</td></tr>
+          <tr><td>Billing in one place</td><td class="yes">Yes, Stripe</td><td class="part">Appwrite plans</td><td class="part">Webflow plans</td><td class="part">Wix plans</td></tr>
+          <tr><td>Agent-friendly</td><td class="yes">Designed for it</td><td class="yes">SDKs, Terraform</td><td class="part">MCP and APIs</td><td class="part">APIs</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>What we should build to beat them (and be more fun)</h2>
+    <ol class="borrow">
+      <li><div><b>The secret key manager first.</b> <span>Like Stripe Projects: every service's keys land in one vault, scoped per desk, rotated in one click, never pasted by hand. That is the first thing Justin asked for.</span></div></li>
+      <li><div><b>One source of truth: the JSON scene recipe.</b> <span>Like Webflow's canvas. Pages, motion, CMS and 3D scenes all read from the same recipe, so changing it changes everything.</span></div></li>
+      <li><div><b>One permission model.</b> <span>Like Appwrite. Desks, agents and people share the same roles, so "who can touch what" is written once.</span></div></li>
+      <li><div><b>A locked content mode for clients.</b> <span>Like Wix Studio. Clients change words and pictures by typing or speaking, and the design can't break.</span></div></li>
+      <li><div><b>Make it a place, not a dashboard.</b> <span>None of the four is fun. The theater, the desks and the storyboard are the difference: you watch the work happen.</span></div></li>
+    </ol>
+  </section>
+
+  <p class="note">Built from public docs and reviews as of October 2026. Plans, features and pricing change often, so confirm details on each product's own docs before deciding.</p>
+
+  <section class="sources">
+    <h2 style="font-size:16px">Sources</h2>
+    <p class="sources"><a href="https://docs.stripe.com/stripe-projects">Stripe Projects docs</a> · <a href="https://appwrite.io/docs">Appwrite docs</a> · <a href="https://appwrite.io/blog/post/how-appwrite-simplifies-backend-development-for-frontend-devs">Appwrite blog</a> · <a href="https://developers.webflow.com/home/changelog/2026/2/27">Webflow developer changelog</a> · <a href="https://brixtemplates.com/blog/is-webflow-good">Brix Templates on Webflow</a> · <a href="https://www.appsrow.com/blog/webflow-cloud-explained-full-stack-apps-and-scaling-to-enterprise">Webflow Cloud explained</a> · <a href="https://www.wix.com/studio/features">Wix Studio features</a> · <a href="https://www.techradar.com/pro/website-building/wix-studio-review">TechRadar Wix Studio review</a> · <a href="https://ecomm.design/wix-studio-review/">ecomm.design Wix Studio review</a></p>
+  </section>
+</div>
+</body>
+</html>
